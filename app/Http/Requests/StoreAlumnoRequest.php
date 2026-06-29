@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreAlumnoRequest extends FormRequest
 {
@@ -22,11 +23,20 @@ class StoreAlumnoRequest extends FormRequest
      */
     public function rules(): array
     {
-        $alumno_id = $this->route('alumno') ? $this->route('alumno')->id : null;
+        $alumnoId = $this->route('alumno')?->id
+                ?? $this->input('id')
+                ?? $this->segment(3);
+
         return [
             'nombre' => 'required|string|max:100',
             'apellido' => 'required|string|max:100',
-            'cedula' => 'required|string|max:12|regex:/^[0-9]+$/|unique:alumnos,cedula,'.$alumno_id,
+            'cedula' => [
+                'required',
+                'string',
+                'max:12',
+                'regex:/^[0-9]+$/',
+                Rule::unique('alumnos', 'cedula')->ignore($alumnoId),
+            ],
             'nacimiento' => 'required|date|before:today',
         ];
     }

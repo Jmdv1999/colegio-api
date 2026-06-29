@@ -22,10 +22,12 @@ class StoreProfesorRequest extends FormRequest
      */
     public function rules(): array
     {
+        $profesor_id = $this->route()?->originalParameter('profesore') ?? $this->segment(3);
+
         return [
             'nombre' => 'required|string|max:100',
             'apellido' => 'required|string|max:100',
-            'cedula' => 'required|string|max:12|regex:/^[0-9]+$/|unique:profesores,cedula',
+            'cedula' => 'required|string|max:12|regex:/^[0-9]+$/|unique:profesores,cedula,'.$profesor_id,
             'asignatura_id' => 'required|exists:asignaturas,id',
         ];
     }

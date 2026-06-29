@@ -22,8 +22,10 @@ class StoreAsignaturaRequest extends FormRequest
      */
     public function rules(): array
     {
+        $asignatura_id = $this->route()?->originalParameter('asignatura') ?? $this->segment(3);
+
         return [
-            'nombre' => 'required|string|max:100|unique:asignaturas,nombre',
+            'nombre' => 'required|string|max:100|unique:asignaturas,nombre,'.$asignatura_id,
             'descripcion' => 'required|string|max:500',
         ];
     }
