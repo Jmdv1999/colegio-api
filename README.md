@@ -23,6 +23,16 @@ Sistema para la gestión de alumnos, asignaturas, profesores y calificaciones de
 7. Iniciar el servidor:
    `php artisan serve`
 
+## Documentación de la API
+La documentación se genera automáticamente con [Scribe](https://scribe.knuckles.wtf/).
+
+Para generarla:
+   `php artisan scribe:generate`
+
+La documentación se publica en `public/docs/` y estará disponible en:
+- Postman collection: `public/docs/collection.json`
+- OpenAPI spec: `public/docs/openapi.yaml`
+
 ## Funcionalidades
 - CRUD completo para Alumnos, Asignaturas, Profesores y Calificaciones.
 - Validación de datos en cada endpoint.
