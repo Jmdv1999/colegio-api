@@ -21,6 +21,24 @@ class StoreCalificacionRequest extends FormRequest
         ];
     }
 
+    public function bodyParameters(): array
+    {
+        return [
+            'alumno_id' => [
+                'description' => 'ID del alumno',
+                'example' => 1,
+            ],
+            'asignatura_id' => [
+                'description' => 'ID de la asignatura',
+                'example' => 1,
+            ],
+            'calificacion' => [
+                'description' => 'Nota del alumno (0 a 20)',
+                'example' => 15.5,
+            ],
+        ];
+    }
+
     protected function prepareForValidation(): void
     {
         $this->replace(array_map(fn ($v) => is_string($v) ? trim($v) : $v, $this->all()));

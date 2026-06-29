@@ -33,6 +33,28 @@ class UpdateProfesorRequest extends FormRequest
         ];
     }
 
+    public function bodyParameters(): array
+    {
+        return [
+            'nombre' => [
+                'description' => 'Nombre del profesor',
+                'example' => 'Carlos',
+            ],
+            'apellido' => [
+                'description' => 'Apellido del profesor',
+                'example' => 'González',
+            ],
+            'cedula' => [
+                'description' => 'Cédula de identidad (solo números, formato venezolano)',
+                'example' => '87654321',
+            ],
+            'asignatura_id' => [
+                'description' => 'ID de la asignatura que dicta',
+                'example' => 1,
+            ],
+        ];
+    }
+
     protected function prepareForValidation(): void
     {
         $this->replace(array_map(fn ($v) => is_string($v) ? trim($v) : $v, $this->all()));

@@ -33,6 +33,28 @@ class UpdateAlumnoRequest extends FormRequest
         ];
     }
 
+    public function bodyParameters(): array
+    {
+        return [
+            'nombre' => [
+                'description' => 'Nombre del alumno',
+                'example' => 'Juan',
+            ],
+            'apellido' => [
+                'description' => 'Apellido del alumno',
+                'example' => 'Pérez',
+            ],
+            'cedula' => [
+                'description' => 'Cédula de identidad (solo números, formato venezolano)',
+                'example' => '12345678',
+            ],
+            'nacimiento' => [
+                'description' => 'Fecha de nacimiento',
+                'example' => '2010-05-15',
+            ],
+        ];
+    }
+
     protected function prepareForValidation(): void
     {
         $this->replace(array_map(fn ($v) => is_string($v) ? trim($v) : $v, $this->all()));
