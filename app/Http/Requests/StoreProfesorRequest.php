@@ -25,7 +25,7 @@ class StoreProfesorRequest extends FormRequest
         return [
             'nombre' => 'required|string|max:100',
             'apellido' => 'required|string|max:100',
-            'cedula' => 'required|string|unique:profesores,cedula|max:12',
+            'cedula' => 'required|numeric|unique:profesores,cedula|max_digits:12',
             'asignatura_id' => 'required|exists:asignaturas,id',
         ];
     }

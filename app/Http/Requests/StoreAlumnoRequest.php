@@ -25,7 +25,7 @@ class StoreAlumnoRequest extends FormRequest
       return [
             'nombre'     => 'required|string|max:100',
             'apellido'   => 'required|string|max:100',
-            'cedula'     => 'required|string|unique:alumnos,cedula|max:12',
+            'cedula'     => 'required|numeric|unique:alumnos,cedula|max_digits:12',
             'nacimiento' => 'required|date|before:today',
         ];
     }
