@@ -10,7 +10,6 @@ use Carbon\Carbon;
 
 class Alumno extends Model
 {
-    /** @use HasFactory<\Database\Factories\AlumnoFactory> */
     use HasFactory;
 
     protected $table = 'alumnos';

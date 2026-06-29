@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Asignatura extends Model
 {
-    /** @use HasFactory<\Database\Factories\AsignaturaFactory> */
     use HasFactory;
     protected $table = 'asignaturas';
 

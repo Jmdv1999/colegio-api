@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Calificacion extends Model
 {
-    /** @use HasFactory<\Database\Factories\CalificacionFactory> */
     use HasFactory;
     protected $table = 'calificaciones';
 
