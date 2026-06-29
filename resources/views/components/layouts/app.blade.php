@@ -14,6 +14,7 @@
             <a href="/asignaturas" class="hover:underline">Asignaturas</a>
             <a href="/profesores" class="hover:underline">Profesores</a>
             <a href="/calificaciones" class="hover:underline">Calificaciones</a>
+            <a href="/api/documentation" class="text-gray-400 hover:text-gray-300 hover:underline">Documentación API</a>
         </div>
     </nav>
 

@@ -12,7 +12,7 @@ class StoreAlumnoRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,10 +22,11 @@ class StoreAlumnoRequest extends FormRequest
      */
     public function rules(): array
     {
-      return [
-            'nombre'     => 'required|string|max:100',
-            'apellido'   => 'required|string|max:100',
-            'cedula'     => 'required|numeric|unique:alumnos,cedula|max_digits:12',
+        $alumno_id = $this->route('alumno') ? $this->route('alumno')->id : null;
+        return [
+            'nombre' => 'required|string|max:100',
+            'apellido' => 'required|string|max:100',
+            'cedula' => 'required|string|max:12|regex:/^[0-9]+$/|unique:alumnos,cedula,'.$alumno_id,
             'nacimiento' => 'required|date|before:today',
         ];
     }

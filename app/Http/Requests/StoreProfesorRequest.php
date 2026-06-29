@@ -12,7 +12,7 @@ class StoreProfesorRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,7 +25,7 @@ class StoreProfesorRequest extends FormRequest
         return [
             'nombre' => 'required|string|max:100',
             'apellido' => 'required|string|max:100',
-            'cedula' => 'required|numeric|unique:profesores,cedula|max_digits:12',
+            'cedula' => 'required|string|max:12|regex:/^[0-9]+$/|unique:profesores,cedula',
             'asignatura_id' => 'required|exists:asignaturas,id',
         ];
     }

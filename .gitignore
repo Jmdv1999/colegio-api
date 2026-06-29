@@ -21,7 +21,12 @@
 /storage/*.key
 /storage/pail
 /vendor
+
+/public/vendor/scribe
+/resources/views/scribe
+/storage/app/private/scribe
 _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+.scribe/
