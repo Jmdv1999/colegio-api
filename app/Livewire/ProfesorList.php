@@ -60,9 +60,9 @@ class ProfesorList extends Component
     public function guardar()
     {
         $this->validate([
-            'nombre' => 'required|string|max:255',
-            'apellido' => 'required|string|max:500',
-            'cedula' => 'required|numeric|unique:profesores|max_digits:12',
+            'nombre' => 'required|string|max:100',
+            'apellido' => 'required|string|max:100',
+            'cedula' => 'required|string|regex:/^[0-9]+$/|max:12|unique:profesores,cedula,'.($this->profesor_id ?? 'NULL'),
             'asignatura_id' => 'required|exists:asignaturas,id',
         ]);
 
@@ -80,11 +80,11 @@ class ProfesorList extends Component
             );
 
             DB::commit();
-            session()->flash('message', 'Profesor actualizado con éxito.');
+            session()->flash('message', $this->profesor_id ? 'Profesor actualizado con éxito.' : 'Profesor creado con éxito.');
             $this->reset();
         } catch (Exception $e) {
             DB::rollBack();
-            logger()->error('Error al actualizar profesor: '.$e->getMessage());
+            logger()->error('Error al guardar profesor: '.$e->getMessage());
             session()->flash('error', 'Ocurrió un error al procesar la solicitud.');
         }
 
@@ -99,7 +99,7 @@ class ProfesorList extends Component
             session()->flash('message', 'Profesor eliminado correctamente.');
         } catch (Exception $e) {
             logger()->error('Error al eliminar profesor: '.$e->getMessage());
-            session()->flash('error', 'No se pudo eliminar el registro, posiblemente tiene información asociada.');
+            session()->flash('error', 'No se pudo eliminar el registro.');
         }
     }
 

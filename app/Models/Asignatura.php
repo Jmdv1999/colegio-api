@@ -24,4 +24,9 @@ class Asignatura extends Model
     {
         return $this->hasMany(Calificacion::class, 'asignatura_id');
     }
+
+    public function profesores()
+    {
+        return $this->hasMany(Profesor::class, 'asignatura_id');
+    }
 }

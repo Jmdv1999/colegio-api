@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreCalificacionRequest extends FormRequest
+class UpdateCalificacionRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -15,9 +15,9 @@ class StoreCalificacionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'alumno_id' => 'required|exists:alumnos,id',
-            'asignatura_id' => 'required|exists:asignaturas,id',
-            'calificacion' => 'required|numeric|between:0,20',
+            'alumno_id' => 'sometimes|required|exists:alumnos,id',
+            'asignatura_id' => 'sometimes|required|exists:asignaturas,id',
+            'calificacion' => 'sometimes|required|numeric|between:0,20',
         ];
     }
 

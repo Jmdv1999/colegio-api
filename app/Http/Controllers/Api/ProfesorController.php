@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProfesorRequest;
+use App\Http\Requests\UpdateProfesorRequest;
 use App\Http\Resources\ProfesorResource;
 use App\Models\Profesor;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @group Profesores
@@ -64,9 +66,16 @@ class ProfesorController extends Controller
      * @responseField cedula string Cédula de identidad del profesor.
      * @responseField asignatura object Asignatura que imparte el profesor.
      */
-    public function show(Profesor $profesor)
+    public function show(string $id)
     {
-        return new ProfesorResource($profesor->load('asignatura'));
+        $profesor = Profesor::with('asignatura')->find($id);
+
+        if (!$profesor) {
+            return response()->json([
+                'message' => "Profesor con ID $id no encontrado",
+            ], 404);
+        }
+        return new ProfesorResource($profesor);
     }
 
     /**
@@ -87,8 +96,10 @@ class ProfesorController extends Controller
      * @responseField cedula string Cédula de identidad del profesor.
      * @responseField asignatura object Asignatura que imparte el profesor.
      */
-    public function update(StoreProfesorRequest $request, Profesor $profesor)
+    public function update(UpdateProfesorRequest $request, string $id)
     {
+        $profesor = Profesor::with('asignatura')->findOrFail($id);
+
         $profesor->update($request->validated());
 
         return new ProfesorResource($profesor);
@@ -103,8 +114,16 @@ class ProfesorController extends Controller
      *
      * @response 204
      */
-    public function destroy(Profesor $profesor)
+    public function destroy(string $id)
     {
+        $profesor = Profesor::find($id);
+
+        if (!$profesor) {
+            return response()->json([
+                'message' => "Profesor con ID $id no encontrado",
+            ], 404);
+        }
+
         $profesor->delete();
 
         return response()->noContent();

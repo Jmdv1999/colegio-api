@@ -46,7 +46,7 @@ class AsignaturaList extends Component
     public function guardar()
     {
         $this->validate([
-            'nombre' => 'required|string|max:255',
+            'nombre' => 'required|string|max:100|unique:asignaturas,nombre,'.($this->asignatura_id ?? 'NULL'),
             'descripcion' => 'required|string|max:500',
         ]);
 
@@ -87,12 +87,23 @@ class AsignaturaList extends Component
     {
         try {
             $asignatura = Asignatura::findOrFail($id);
+
+            if ($asignatura->calificaciones()->exists()) {
+                session()->flash('error', 'No se puede eliminar la asignatura porque tiene calificaciones asociadas.');
+                return;
+            }
+
+            if ($asignatura->profesores()->exists()) {
+                session()->flash('error', 'No se puede eliminar la asignatura porque tiene profesores asociados.');
+                return;
+            }
+
             $asignatura->delete();
 
             session()->flash('message', 'Asignatura eliminada correctamente.');
         } catch (Exception $e) {
             logger()->error('Error al eliminar asignatura: '.$e->getMessage());
-            session()->flash('error', 'No se pudo eliminar el registro, posiblemente tiene información asociada.');
+            session()->flash('error', 'No se pudo eliminar el registro.');
         }
     }
 }

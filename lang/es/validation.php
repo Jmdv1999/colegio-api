@@ -162,6 +162,16 @@ return [
         ],
     ],
 
-    'attributes' => [],
+    'attributes' => [
+        'nombre' => 'nombre',
+        'apellido' => 'apellido',
+        'cedula' => 'cédula',
+        'nacimiento' => 'fecha de nacimiento',
+        'descripcion' => 'descripción',
+        'calificacion' => 'calificación',
+        'alumno_id' => 'alumno',
+        'asignatura_id' => 'asignatura',
+        'asignatura.nombre' => 'asignatura',
+    ],
 
 ];

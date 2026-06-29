@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAsignaturaRequest;
+use App\Http\Requests\UpdateAsignaturaRequest;
 use App\Http\Resources\AsignaturaResource;
 use App\Models\Asignatura;
 
@@ -56,8 +57,16 @@ class AsignaturaController extends Controller
      * @responseField nombre string Nombre de la asignatura.
      * @responseField descripcion string Descripción de la asignatura.
      */
-    public function show(Asignatura $asignatura)
+    public function show(string $id)
     {
+        $asignatura = Asignatura::find($id);
+
+        if (!$asignatura) {
+            return response()->json([
+                'message' => "Asignatura con ID $id no encontrada",
+            ], 404);
+        }
+
         return new AsignaturaResource($asignatura);
     }
 
@@ -75,8 +84,10 @@ class AsignaturaController extends Controller
      * @responseField nombre string Nombre de la asignatura.
      * @responseField descripcion string Descripción de la asignatura.
      */
-    public function update(StoreAsignaturaRequest $request, Asignatura $asignatura)
+    public function update(UpdateAsignaturaRequest $request, string $id)
     {
+        $asignatura = Asignatura::findOrFail($id);
+
         $asignatura->update($request->validated());
 
         return new AsignaturaResource($asignatura);
@@ -91,8 +102,28 @@ class AsignaturaController extends Controller
      *
      * @response 204
      */
-    public function destroy(Asignatura $asignatura)
+    public function destroy(string $id)
     {
+        $asignatura = Asignatura::find($id);
+
+        if (!$asignatura) {
+            return response()->json([
+                'message' => "Asignatura con ID $id no encontrada",
+            ], 404);
+        }
+
+        if ($asignatura->calificaciones()->exists()) {
+            return response()->json([
+                'message' => 'No se puede eliminar la asignatura porque tiene calificaciones asociadas.',
+            ], 409);
+        }
+
+        if ($asignatura->profesores()->exists()) {
+            return response()->json([
+                'message' => 'No se puede eliminar la asignatura porque tiene profesores asociados.',
+            ], 409);
+        }
+
         $asignatura->delete();
 
         return response()->noContent();

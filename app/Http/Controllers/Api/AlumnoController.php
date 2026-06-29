@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAlumnoRequest;
+use App\Http\Requests\UpdateAlumnoRequest;
 use App\Http\Resources\AlumnoResource;
 use App\Models\Alumno;
 
@@ -67,8 +68,16 @@ class AlumnoController extends Controller
      * @responseField nacimiento string Fecha de nacimiento (YYYY-MM-DD).
      * @responseField edad integer Edad calculada del alumno.
      */
-    public function show(Alumno $alumno)
+    public function show(string $id)
     {
+        $alumno = Alumno::find($id);
+
+        if (!$alumno) {
+            return response()->json([
+                'message' => "Alumno con ID $id no encontrado",
+            ], 404);
+        }
+
         return new AlumnoResource($alumno);
     }
 
@@ -91,8 +100,10 @@ class AlumnoController extends Controller
      * @responseField nacimiento string Fecha de nacimiento (YYYY-MM-DD).
      * @responseField edad integer Edad calculada del alumno.
      */
-    public function update(StoreAlumnoRequest $request, Alumno $alumno)
+    public function update(UpdateAlumnoRequest $request, string $id)
     {
+        $alumno = Alumno::findOrFail($id);
+
         $alumno->update($request->validated());
 
         return new AlumnoResource($alumno);
@@ -107,8 +118,22 @@ class AlumnoController extends Controller
      *
      * @response 204
      */
-    public function destroy(Alumno $alumno)
+    public function destroy(string $id)
     {
+        $alumno = Alumno::find($id);
+
+        if (!$alumno) {
+            return response()->json([
+                'message' => "Alumno con ID $id no encontrado",
+            ], 404);
+        }
+
+        if ($alumno->calificaciones()->exists()) {
+            return response()->json([
+                'message' => 'No se puede eliminar el alumno porque tiene calificaciones asociadas.',
+            ], 409);
+        }
+
         $alumno->delete();
 
         return response()->noContent();

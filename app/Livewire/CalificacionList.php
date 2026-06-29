@@ -59,9 +59,26 @@ class CalificacionList extends Component
     {
         $this->validate([
             'calificacion' => 'required|numeric|min:0|max:20',
-            'alumno_id' => 'required|exists:alumnos,id',
-            'asignatura_id' => 'required|exists:asignaturas,id',
+            'alumno_id' => [
+                'required',
+                'exists:alumnos,id',
+            ],
+            'asignatura_id' => [
+                'required',
+                'exists:asignaturas,id',
+            ],
         ]);
+
+        $exists = Calificacion::where('alumno_id', $this->alumno_id)
+            ->where('asignatura_id', $this->asignatura_id)
+            ->where('id', '!=', $this->calificacion_id ?? 0)
+            ->exists();
+
+        if ($exists) {
+            $this->addError('alumno_id', 'Este alumno ya tiene una calificación en esta asignatura.');
+            return;
+        }
+
         try {
             DB::beginTransaction();
 
@@ -94,7 +111,7 @@ class CalificacionList extends Component
             session()->flash('message', 'Calificación eliminada correctamente.');
         } catch (Exception $e) {
             logger()->error('Error al eliminar calificación: '.$e->getMessage());
-            session()->flash('error', 'No se pudo eliminar el registro, posiblemente tiene información asociada.');
+            session()->flash('error', 'No se pudo eliminar el registro.');
         }
     }
 

@@ -48,10 +48,10 @@ class AlumnoList extends Component
     public function guardar()
     {
         $this->validate([
-            'nombre' => 'required|string|max:255',
-            'apellido' => 'required|string|max:255',
-            'cedula' => 'required|unique:alumnos,cedula,'.($this->alumno_id ?? 'NULL').'|numeric|max_digits:12',
-            'nacimiento' => 'required|date',
+            'nombre' => 'required|string|max:100',
+            'apellido' => 'required|string|max:100',
+            'cedula' => 'required|string|regex:/^[0-9]+$/|max:12|unique:alumnos,cedula,'.($this->alumno_id ?? 'NULL'),
+            'nacimiento' => 'required|date|before:today',
         ]);
 
         try {
@@ -81,12 +81,18 @@ class AlumnoList extends Component
     {
         try {
             $alumno = Alumno::findOrFail($id);
+
+            if ($alumno->calificaciones()->exists()) {
+                session()->flash('error', 'No se puede eliminar el alumno porque tiene calificaciones asociadas.');
+                return;
+            }
+
             $alumno->delete();
 
             session()->flash('message', 'Alumno eliminado correctamente.');
         } catch (Exception $e) {
             logger()->error('Error al eliminar alumno: '.$e->getMessage());
-            session()->flash('error', 'No se pudo eliminar el registro, posiblemente tiene información asociada.');
+            session()->flash('error', 'No se pudo eliminar el registro.');
         }
     }
 

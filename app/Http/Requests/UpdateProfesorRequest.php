@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreProfesorRequest extends FormRequest
+class UpdateProfesorRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -19,16 +19,17 @@ class StoreProfesorRequest extends FormRequest
         $profesorId = is_object($profesorId) ? $profesorId->id : $profesorId;
 
         return [
-            'nombre' => 'required|string|max:100',
-            'apellido' => 'required|string|max:100',
+            'nombre' => 'sometimes|required|string|max:100',
+            'apellido' => 'sometimes|required|string|max:100',
             'cedula' => [
+                'sometimes',
                 'required',
                 'string',
                 'max:12',
                 'regex:/^[0-9]+$/',
                 Rule::unique('profesores', 'cedula')->ignore($profesorId),
             ],
-            'asignatura_id' => 'required|exists:asignaturas,id',
+            'asignatura_id' => 'sometimes|required|exists:asignaturas,id',
         ];
     }
 

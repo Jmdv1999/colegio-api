@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreAsignaturaRequest extends FormRequest
+class UpdateAsignaturaRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -20,12 +20,13 @@ class StoreAsignaturaRequest extends FormRequest
 
         return [
             'nombre' => [
+                'sometimes',
                 'required',
                 'string',
                 'max:100',
                 Rule::unique('asignaturas', 'nombre')->ignore($asignaturaId),
             ],
-            'descripcion' => 'required|string|max:500',
+            'descripcion' => 'sometimes|required|string|max:500',
         ];
     }
 

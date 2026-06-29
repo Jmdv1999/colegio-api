@@ -8,24 +8,15 @@ use Illuminate\Validation\Rule;
 
 class StoreAlumnoRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
-        $alumnoId = $this->route('alumno')?->id
-                ?? $this->input('id')
-                ?? $this->segment(3);
+        $alumnoId = $this->route('alumno');
+        $alumnoId = is_object($alumnoId) ? $alumnoId->id : $alumnoId;
 
         return [
             'nombre' => 'required|string|max:100',
@@ -39,5 +30,10 @@ class StoreAlumnoRequest extends FormRequest
             ],
             'nacimiento' => 'required|date|before:today',
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->replace(array_map(fn ($v) => is_string($v) ? trim($v) : $v, $this->all()));
     }
 }
