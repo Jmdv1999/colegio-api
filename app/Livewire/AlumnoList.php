@@ -22,9 +22,15 @@ class AlumnoList extends Component
 
     public function render()
     {
+        $query = Alumno::query();
 
-        $alumnos = Alumno::orderBy($this->sortColumn, $this->sortDirection)
-            ->paginate(10);
+        if ($this->sortColumn === 'edad') {
+            $query->orderByRaw('TIMESTAMPDIFF(YEAR, nacimiento, CURDATE()) '.$this->sortDirection);
+        } else {
+            $query->orderBy($this->sortColumn, $this->sortDirection);
+        }
+
+        $alumnos = $query->paginate(10);
 
         return view('livewire.alumno-list', compact('alumnos'))
             ->layout('components.layouts.app');
