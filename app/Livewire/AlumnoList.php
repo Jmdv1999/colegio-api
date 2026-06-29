@@ -72,6 +72,19 @@ class AlumnoList extends Component
         }
     }
 
+    public function eliminar($id)
+    {
+        try {
+            $alumno = Alumno::findOrFail($id);
+            $alumno->delete();
+
+            session()->flash('message', 'Alumno eliminado correctamente.');
+        } catch (Exception $e) {
+            logger()->error('Error al eliminar alumno: '.$e->getMessage());
+            session()->flash('error', 'No se pudo eliminar el registro, posiblemente tiene información asociada.');
+        }
+    }
+
     public function render()
     {
         $query = Alumno::query();

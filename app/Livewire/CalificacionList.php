@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Alumno;
 use App\Models\Asignatura;
 use App\Models\Calificacion;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -61,13 +62,26 @@ class CalificacionList extends Component
             DB::commit();
             session()->flash('message', 'Calificación creada con éxito.');
             $this->reset();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             logger()->error('Error al crear calificación: '.$e->getMessage());
             session()->flash('error', 'Ocurrió un error al procesar la solicitud.');
         }
 
         $this->cerrarModal();
+    }
+
+    public function eliminar($id)
+    {
+        try {
+            $calificacion = Calificacion::findOrFail($id);
+            $calificacion->delete();
+
+            session()->flash('message', 'Calificación eliminada correctamente.');
+        } catch (Exception $e) {
+            logger()->error('Error al eliminar calificación: '.$e->getMessage());
+            session()->flash('error', 'No se pudo eliminar el registro, posiblemente tiene información asociada.');
+        }
     }
 
     public function render()
@@ -85,8 +99,6 @@ class CalificacionList extends Component
         } else {
             $query->orderBy($this->sortColumn, $this->sortDirection);
         }
-
-        $evaluacionesExistentes = Calificacion::all();
 
         $alumnosDisponibles = Alumno::query();
         if ($this->asignatura_id) {

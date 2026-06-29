@@ -26,6 +26,7 @@
                 <th class="p-2 border cursor-pointer" wire:click="sortBy('asignatura.nombre')">
                     Asignatura
                 </th>
+                   <th class="p-2 border"></th>
             </tr>
         </thead>
         <tbody>
@@ -34,6 +35,13 @@
                     <td class="p-2 border">{{ $profesor->nombre }} {{ $profesor->apellido }}</td>
                     <td class="p-2 border">{{ $profesor->cedula }}</td>
                     <td class="p-2 border">{{ $profesor->asignatura->nombre }}</td>
+                        <td class="p-2 border">
+                        <button wire:click="eliminar({{ $profesor->id }})"
+                            wire:confirm="¿Estás completamente seguro? Esta acción borrará el profesor '{{ $profesor->nombre }}' permanentemente."
+                            class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-sm">
+                            Eliminar
+                        </button>
+                    </td>
                 </tr>
             @endforeach
         </tbody>

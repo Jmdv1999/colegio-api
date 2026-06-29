@@ -33,7 +33,7 @@ class AsignaturaList extends Component
         $this->modalAbierto = false;
     }
 
-      public function guardar()
+    public function guardar()
     {
         $this->validate([
             'nombre' => 'required|string|max:255',
@@ -58,7 +58,6 @@ class AsignaturaList extends Component
         }
     }
 
-
     public function sortBy($column)
     {
         $this->sortDirection = ($this->sortColumn == $column && $this->sortDirection == 'asc') ? 'desc' : 'asc';
@@ -70,5 +69,18 @@ class AsignaturaList extends Component
         return view('livewire.asignatura-list', [
             'asignaturas' => Asignatura::orderBy($this->sortColumn, $this->sortDirection)->paginate(10),
         ])->layout('components.layouts.app');
+    }
+
+    public function eliminar($id)
+    {
+        try {
+            $asignatura = Asignatura::findOrFail($id);
+            $asignatura->delete();
+
+            session()->flash('message', 'Asignatura eliminada correctamente.');
+        } catch (Exception $e) {
+            logger()->error('Error al eliminar asignatura: '.$e->getMessage());
+            session()->flash('error', 'No se pudo eliminar el registro, posiblemente tiene información asociada.');
+        }
     }
 }

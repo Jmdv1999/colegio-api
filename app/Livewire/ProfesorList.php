@@ -74,6 +74,19 @@ class ProfesorList extends Component
 
     }
 
+    public function eliminar($id)
+    {
+        try {
+            $profesor = Profesor::findOrFail($id);
+            $profesor->delete();
+
+            session()->flash('message', 'Profesor eliminado correctamente.');
+        } catch (Exception $e) {
+            logger()->error('Error al eliminar profesor: '.$e->getMessage());
+            session()->flash('error', 'No se pudo eliminar el registro, posiblemente tiene información asociada.');
+        }
+    }
+
     public function render()
     {
         $query = Profesor::query();
