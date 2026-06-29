@@ -3,9 +3,15 @@
     <table class="w-full border-collapse">
         <thead>
             <tr class="bg-gray-200">
-                <th class="p-2 border">Estudiante</th>
-                <th class="p-2 border">Asignatura</th>
-                <th class="p-2 border">Calificación</th>
+                <th class="p-2 border cursor-pointer" wire:click="sortBy('alumno.nombre')">
+                    Estudiante
+                </th>
+                <th class="p-2 border cursor-pointer" wire:click="sortBy('asignatura.nombre')">
+                    Asignatura
+                </th>
+                <th class="p-2 border cursor-pointer" wire:click="sortBy('calificacion')">
+                    Calificación
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -18,4 +24,9 @@
             @endforeach
         </tbody>
     </table>
+    @if ($calificaciones->hasPages())
+        <div class="mt-4 bg-gray-200 p-2 rounded">
+            {{ $calificaciones->links() }}
+        </div>
+    @endif
 </div>
