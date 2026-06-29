@@ -1,8 +1,8 @@
 <div class="bg-white p-6 rounded shadow">
     <div class="flex justify-between items-center mb-4 p-2">
-        <h2 class="text-xl font-bold">
+        <h1 class="text-xl font-bold">
             Listado de Alumnos
-        </h2>
+        </h1>
         <button wire:click="AbrirModal()" class="bg-blue-500 text-white px-4 py-2 rounded">
             Nuevo Alumno
         </button>
@@ -41,6 +41,9 @@
                             class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-sm">
                             Eliminar
                         </button>
+                        <button wire:click="editar({{ $alumno->id }})" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-3 rounded text-sm">
+                            Editar
+                        </button>
                     </td>
                 </tr>
             @endforeach
@@ -54,7 +57,9 @@
     @if ($modalAbierto)
         <div class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75">
             <div class="bg-white p-6 rounded shadow-lg w-1/3">
-                <h2 class="text-xl font-bold mb-4">Crear Alumno</h2>
+                <h2 class="text-xl font-bold mb-4">
+                    {{ $alumno_id ? 'Editar Alumno' : 'Nuevo Alumno' }}
+                </h2>
 
                 <input type="text" wire:model="nombre" placeholder="Nombre" class="border p-2 w-full mb-2">
                 @error('nombre')

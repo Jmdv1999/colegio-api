@@ -24,6 +24,8 @@ class AlumnoList extends Component
 
     public $nacimiento;
 
+    public $alumno_id;
+
     public $modalAbierto = false;
 
     public function AbrirModal()
@@ -48,23 +50,26 @@ class AlumnoList extends Component
         $this->validate([
             'nombre' => 'required|string|max:255',
             'apellido' => 'required|string|max:255',
-            'cedula' => 'required|unique:alumnos,cedula|numeric|max_digits:12',
+            'cedula' => 'required|unique:alumnos,cedula,'.($this->alumno_id ?? 'NULL').'|numeric|max_digits:12',
             'nacimiento' => 'required|date',
         ]);
 
         try {
             DB::beginTransaction();
 
-            Alumno::create([
-                'nombre' => $this->nombre,
-                'apellido' => $this->apellido,
-                'cedula' => $this->cedula,
-                'nacimiento' => $this->nacimiento,
-            ]);
-
+            Alumno::updateOrCreate(
+                ['id' => $this->alumno_id],
+                [
+                    'nombre' => $this->nombre,
+                    'apellido' => $this->apellido,
+                    'cedula' => $this->cedula,
+                    'nacimiento' => $this->nacimiento,
+                ]
+            );
             DB::commit();
-            session()->flash('message', 'Alumno creado con éxito.');
+            session()->flash('message', $this->alumno_id ? 'Alumno actualizado.' : 'Alumno creado.');
             $this->reset();
+            $this->modalAbierto = false;
         } catch (Exception $e) {
             DB::rollBack();
             logger()->error('Error al crear alumno: '.$e->getMessage());
@@ -83,6 +88,18 @@ class AlumnoList extends Component
             logger()->error('Error al eliminar alumno: '.$e->getMessage());
             session()->flash('error', 'No se pudo eliminar el registro, posiblemente tiene información asociada.');
         }
+    }
+
+    public function editar($id)
+    {
+        $alumno = Alumno::findOrFail($id);
+        $this->alumno_id = $alumno->id;
+        $this->nombre = $alumno->nombre;
+        $this->apellido = $alumno->apellido;
+        $this->cedula = $alumno->cedula;
+        $this->nacimiento = $alumno->nacimiento;
+
+        $this->modalAbierto = true;
     }
 
     public function render()

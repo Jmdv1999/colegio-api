@@ -25,6 +25,8 @@ class ProfesorList extends Component
 
     public $asignatura_id;
 
+    public $profesor_id;
+
     public $modalAbierto = false;
 
     public function AbrirModal()
@@ -36,6 +38,17 @@ class ProfesorList extends Component
     public function cerrarModal()
     {
         $this->modalAbierto = false;
+    }
+
+    public function editar($id)
+    {
+        $profesor = Profesor::findOrFail($id);
+        $this->profesor_id = $profesor->id;
+        $this->nombre = $profesor->nombre;
+        $this->apellido = $profesor->apellido;
+        $this->cedula = $profesor->cedula;
+        $this->asignatura_id = $profesor->asignatura_id;
+        $this->modalAbierto = true;
     }
 
     public function sortBy($column)
@@ -56,19 +69,22 @@ class ProfesorList extends Component
         try {
             DB::beginTransaction();
 
-            Profesor::create([
-                'nombre' => $this->nombre,
-                'apellido' => $this->apellido,
-                'cedula' => $this->cedula,
-                'asignatura_id' => $this->asignatura_id,
-            ]);
+            Profesor::updateOrCreate(
+                ['id' => $this->profesor_id],
+                [
+                    'nombre' => $this->nombre,
+                    'apellido' => $this->apellido,
+                    'cedula' => $this->cedula,
+                    'asignatura_id' => $this->asignatura_id,
+                ]
+            );
 
             DB::commit();
-            session()->flash('message', 'Profesor creado con éxito.');
+            session()->flash('message', 'Profesor actualizado con éxito.');
             $this->reset();
         } catch (Exception $e) {
             DB::rollBack();
-            logger()->error('Error al crear profesor: '.$e->getMessage());
+            logger()->error('Error al actualizar profesor: '.$e->getMessage());
             session()->flash('error', 'Ocurrió un error al procesar la solicitud.');
         }
 
@@ -98,10 +114,14 @@ class ProfesorList extends Component
         } else {
             $query->orderBy($this->sortColumn, $this->sortDirection);
         }
+        $asignaturasDisponibles = Asignatura::whereNotIn('id',
+            Profesor::where('id', '!=', $this->profesor_id ?? 0)
+                ->pluck('asignatura_id')
+        )->get();
 
         return view('livewire.profesor-list', [
             'profesores' => $query->paginate(10),
-            'asignaturas' => Asignatura::whereNotIn('id', Profesor::select('asignatura_id'))->get(),
+            'asignaturas' => $asignaturasDisponibles,
         ])->layout('components.layouts.app');
     }
 }

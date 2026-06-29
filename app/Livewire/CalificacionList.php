@@ -24,11 +24,23 @@ class CalificacionList extends Component
 
     public $asignatura_id;
 
+    public $calificacion_id;
+
     public $modalAbierto = false;
 
     public function AbrirModal()
     {
         $this->reset();
+        $this->modalAbierto = true;
+    }
+
+    public function editar($id)
+    {
+        $calificacion = Calificacion::findOrFail($id);
+        $this->calificacion_id = $calificacion->id;
+        $this->calificacion = $calificacion->calificacion;
+        $this->alumno_id = $calificacion->alumno_id;
+        $this->asignatura_id = $calificacion->asignatura_id;
         $this->modalAbierto = true;
     }
 
@@ -53,14 +65,16 @@ class CalificacionList extends Component
         try {
             DB::beginTransaction();
 
-            Calificacion::create([
-                'calificacion' => $this->calificacion,
-                'alumno_id' => $this->alumno_id,
-                'asignatura_id' => $this->asignatura_id,
-            ]);
+            Calificacion::updateOrCreate(
+                ['id' => $this->calificacion_id],
+                [
+                    'calificacion' => $this->calificacion,
+                    'alumno_id' => $this->alumno_id,
+                    'asignatura_id' => $this->asignatura_id,
+                ]);
 
             DB::commit();
-            session()->flash('message', 'Calificación creada con éxito.');
+            session()->flash('message', $this->calificacion_id ? 'Calificación actualizada.' : 'Calificación creada.');
             $this->reset();
         } catch (Exception $e) {
             DB::rollBack();
@@ -102,12 +116,20 @@ class CalificacionList extends Component
 
         $alumnosDisponibles = Alumno::query();
         if ($this->asignatura_id) {
-            $alumnosDisponibles->whereNotIn('id', Calificacion::where('asignatura_id', $this->asignatura_id)->pluck('alumno_id'));
+            $alumnosDisponibles->whereNotIn('id',
+                Calificacion::where('asignatura_id', $this->asignatura_id)
+                    ->where('id', '!=', $this->calificacion_id ?? 0)
+                    ->pluck('alumno_id')
+            );
         }
 
         $asignaturasDisponibles = Asignatura::query();
         if ($this->alumno_id) {
-            $asignaturasDisponibles->whereNotIn('id', Calificacion::where('alumno_id', $this->alumno_id)->pluck('asignatura_id'));
+            $asignaturasDisponibles->whereNotIn('id',
+                Calificacion::where('alumno_id', $this->alumno_id)
+                    ->where('id', '!=', $this->calificacion_id ?? 0)
+                    ->pluck('asignatura_id')
+            );
         }
 
         return view('livewire.calificacion-list', [

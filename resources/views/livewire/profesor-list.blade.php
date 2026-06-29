@@ -41,6 +41,10 @@
                             class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-sm">
                             Eliminar
                         </button>
+                        <button wire:click="editar({{ $profesor->id }})"
+                            class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-3 rounded text-sm">
+                            Editar
+                        </button>
                     </td>
                 </tr>
             @endforeach
@@ -54,7 +58,7 @@
     @if ($modalAbierto)
         <div class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75">
             <div class="bg-white p-6 rounded shadow-lg w-1/3">
-                <h2 class="text-xl font-bold mb-4">Crear Profesor</h2>
+                <h2 class="text-xl font-bold mb-4">{{ $profesor_id ? 'Editar Profesor' : 'Crear Profesor' }}</h2>
 
                 <input type="text" wire:model="nombre" placeholder="Nombre" class="border p-2 w-full mb-2">
                 @error('nombre')

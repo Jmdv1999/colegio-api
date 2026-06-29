@@ -21,6 +21,7 @@ class AsignaturaList extends Component
     public $sortColumn = 'nombre';
 
     public $sortDirection = 'asc';
+    public $asignatura_id;
 
     public function AbrirModal()
     {
@@ -33,6 +34,15 @@ class AsignaturaList extends Component
         $this->modalAbierto = false;
     }
 
+    public function editar($id)
+    {
+        $asignatura = Asignatura::findOrFail($id);
+        $this->asignatura_id = $asignatura->id;
+        $this->nombre = $asignatura->nombre;
+        $this->descripcion = $asignatura->descripcion;
+        $this->modalAbierto = true;
+    }
+
     public function guardar()
     {
         $this->validate([
@@ -43,13 +53,15 @@ class AsignaturaList extends Component
         try {
             DB::beginTransaction();
 
-            Asignatura::create([
+            Asignatura::updateOrCreate([
+                'id' => $this->asignatura_id
+            ], [
                 'nombre' => $this->nombre,
                 'descripcion' => $this->descripcion,
             ]);
 
             DB::commit();
-            session()->flash('message', 'Asignatura creada con éxito.');
+            session()->flash('message', $this->asignatura_id ? 'Asignatura actualizada con éxito.' : 'Asignatura creada con éxito.');
             $this->reset();
         } catch (Exception $e) {
             DB::rollBack();
