@@ -108,12 +108,12 @@ class CalificacionController extends Controller
         $alumnoId = $request->input('alumno_id', $calificacion->alumno_id);
         $asignaturaId = $request->input('asignatura_id', $calificacion->asignatura_id);
 
-        $calificacion = Calificacion::where([
+        $existe = Calificacion::where([
             'alumno_id' => $alumnoId,
             'asignatura_id' => $asignaturaId,
         ])->where('id', '!=', $id)->exists();
 
-        if ($calificacion) {
+        if ($existe) {
             return response()->json([
                 'message' => 'Ya existe una calificación para este alumno en esta asignatura.',
             ], 409);

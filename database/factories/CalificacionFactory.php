@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Alumno;
+use App\Models\Asignatura;
 use App\Models\Calificacion;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -17,10 +19,10 @@ class CalificacionFactory extends Factory
      */
     public function definition(): array
     {
-       return [
-        'alumno_id' => \App\Models\Alumno::factory(),
-        'asignatura_id' => \App\Models\Asignatura::factory(),
-        'calificacion' => fake()->randomFloat(2, 0, 20),
-    ];
-}
+        return [
+            'alumno_id' => Alumno::factory(),
+            'asignatura_id' => Asignatura::factory(),
+            'calificacion' => fake()->randomFloat(2, 0, 20),
+        ];
+    }
 }

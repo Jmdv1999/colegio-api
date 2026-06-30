@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Alumno;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class AlumnoSeeder extends Seeder

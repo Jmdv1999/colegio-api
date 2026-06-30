@@ -54,7 +54,7 @@ class AsignaturaList extends Component
             DB::beginTransaction();
 
             Asignatura::updateOrCreate([
-                'id' => $this->asignatura_id
+                'id' => $this->asignatura_id,
             ], [
                 'nombre' => $this->nombre,
                 'descripcion' => $this->descripcion,

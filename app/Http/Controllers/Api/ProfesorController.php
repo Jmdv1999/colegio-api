@@ -7,7 +7,6 @@ use App\Http\Requests\StoreProfesorRequest;
 use App\Http\Requests\UpdateProfesorRequest;
 use App\Http\Resources\ProfesorResource;
 use App\Models\Profesor;
-use Illuminate\Support\Facades\Log;
 
 /**
  * @group Profesores

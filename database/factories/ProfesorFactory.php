@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Asignatura;
 use App\Models\Profesor;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -17,11 +18,11 @@ class ProfesorFactory extends Factory
      */
     public function definition(): array
     {
-      return [
-        'nombre' => fake()->firstName(),
-        'apellido' => fake()->lastName(),
-        'cedula' => fake()->unique()->numerify('###########'),
-        'asignatura_id' => \App\Models\Asignatura::factory(),
-    ];
+        return [
+            'nombre' => fake()->firstName(),
+            'apellido' => fake()->lastName(),
+            'cedula' => fake()->unique()->numerify('###########'),
+            'asignatura_id' => Asignatura::factory(),
+        ];
     }
 }

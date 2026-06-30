@@ -14,7 +14,7 @@ class Calificacion extends Model
         'alumno_id',
         'asignatura_id',
         'calificacion',
-    ]; 
+    ];
     protected $hidden = [
         'created_at',
         'updated_at',

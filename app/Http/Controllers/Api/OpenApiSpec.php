@@ -34,6 +34,4 @@ namespace App\Http\Controllers\Api;
  *   @OA\Property(property="nacimiento", type="string", format="date", example="2000-01-15")
  * )
  */
-class OpenApiSpec
-{
-}
+class OpenApiSpec {}
