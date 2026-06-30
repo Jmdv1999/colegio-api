@@ -100,7 +100,7 @@ class AsignaturaList extends Component
 
             $asignatura->delete();
 
-            session()->flash('message', 'Asignatura eliminada correctamente.');
+            session()->flash('message', 'Asignatura eliminada con éxito.');
         } catch (Exception $e) {
             logger()->error('Error al eliminar asignatura: '.$e->getMessage());
             session()->flash('error', 'No se pudo eliminar el registro.');

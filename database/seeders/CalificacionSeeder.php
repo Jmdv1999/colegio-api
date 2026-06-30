@@ -9,15 +9,32 @@ use Illuminate\Database\Seeder;
 
 class CalificacionSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
-    {
-        Calificacion::factory(20)->make()->each(function ($calificacion) {
-            $calificacion->alumno_id = Alumno::inRandomOrder()->first()->id;
-            $calificacion->asignatura_id = Asignatura::inRandomOrder()->first()->id;
-            $calificacion->save();
-        });
+  public function run(): void
+{
+    $Alumnos = Alumno::all();
+    $Asignaturas = Asignatura::all();
+
+    $combinaciones = [];
+
+    foreach ($Alumnos as $alumno) {
+        foreach ($Asignaturas as $asignatura) {
+            $combinaciones[] = [
+                'alumno_id' => $alumno->id,
+                'asignatura_id' => $asignatura->id,
+            ];
+        }
     }
+
+    shuffle($combinaciones);
+
+    $cantidadRegistros = 20;
+    $seleccionadas = array_slice($combinaciones, 0, min($cantidadRegistros, count($combinaciones)));
+
+    foreach ($seleccionadas as $par) {
+        Calificacion::factory()->create([
+            'alumno_id' => $par['alumno_id'],
+            'asignatura_id' => $par['asignatura_id'],
+        ]);
+    }
+}
 }

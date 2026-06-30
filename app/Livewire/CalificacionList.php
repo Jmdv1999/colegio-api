@@ -75,7 +75,7 @@ class CalificacionList extends Component
             ->exists();
 
         if ($exists) {
-            $this->addError('alumno_id', 'Este alumno ya tiene una calificación en esta asignatura.');
+            $this->addError('alumno_id', 'Ya existe una calificación para este alumno en esta asignatura.');
             return;
         }
 
@@ -91,7 +91,7 @@ class CalificacionList extends Component
                 ]);
 
             DB::commit();
-            session()->flash('message', $this->calificacion_id ? 'Calificación actualizada.' : 'Calificación creada.');
+            session()->flash('message', $this->calificacion_id ? 'Calificación actualizada con éxito.' : 'Calificación creada con éxito.');
             $this->reset();
         } catch (Exception $e) {
             DB::rollBack();
@@ -108,7 +108,7 @@ class CalificacionList extends Component
             $calificacion = Calificacion::findOrFail($id);
             $calificacion->delete();
 
-            session()->flash('message', 'Calificación eliminada correctamente.');
+            session()->flash('message', 'Calificación eliminada con éxito.');
         } catch (Exception $e) {
             logger()->error('Error al eliminar calificación: '.$e->getMessage());
             session()->flash('error', 'No se pudo eliminar el registro.');

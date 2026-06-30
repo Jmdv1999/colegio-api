@@ -7,11 +7,15 @@ use Illuminate\Database\Seeder;
 
 class AsignaturaSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        Asignatura::factory(5)->create();
+        $materias = ['Matemáticas', 'Historia', 'Física', 'Química', 'Literatura'];
+
+        foreach ($materias as $materia) {
+            Asignatura::firstOrCreate(
+                ['nombre' => $materia],
+                ['descripcion' => "Clase de $materia."]
+            );
+        }
     }
 }

@@ -18,7 +18,7 @@ class AsignaturaFactory extends Factory
     public function definition(): array
     {
         return [
-            'nombre' => fake()->randomElement(['Matemáticas', 'Historia', 'Física', 'Química', 'Literatura']),
+            'nombre' => fake()->word().' '.fake()->unique()->numberBetween(1, 10000),
             'descripcion' => fake()->sentence(),
         ];
     }

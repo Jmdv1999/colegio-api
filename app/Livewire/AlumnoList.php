@@ -67,7 +67,7 @@ class AlumnoList extends Component
                 ]
             );
             DB::commit();
-            session()->flash('message', $this->alumno_id ? 'Alumno actualizado.' : 'Alumno creado.');
+            session()->flash('message', $this->alumno_id ? 'Alumno actualizado con éxito.' : 'Alumno creado con éxito.');
             $this->reset();
             $this->modalAbierto = false;
         } catch (Exception $e) {
@@ -89,7 +89,7 @@ class AlumnoList extends Component
 
             $alumno->delete();
 
-            session()->flash('message', 'Alumno eliminado correctamente.');
+            session()->flash('message', 'Alumno eliminado con éxito.');
         } catch (Exception $e) {
             logger()->error('Error al eliminar alumno: '.$e->getMessage());
             session()->flash('error', 'No se pudo eliminar el registro.');
